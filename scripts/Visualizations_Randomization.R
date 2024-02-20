@@ -1,13 +1,13 @@
-#CALCULAR EL DÍA EN QUE SE PRESENTA LA MÁXIMA DENSIDAD
+#Calculate day of maximum density
 
 library(ggplot2)
 library(ggpubr)
 library(ggeasy)
 
-#Cargar datos
-data <- read.table("C:\\Users\\camil\\OneDrive\\Documents\\Camila\\Publicaciones\\Historical migration Phenology\\Datos Fenología DAG\\Datos Fenología DAG\\all_data.txt", h = T, sep = "t")
+#Load data
+data <- read.table("your path\all_data.txt", h = T, sep = "t")
 
-#Eliminar NAs (de ser necesario)
+#eliminate nas
 Data <- na.omit(data)
 head(Data)
 
@@ -19,17 +19,18 @@ ggplot(data = dat_50, aes(day_of_year, fill = period)) +
   labs(x="Day of the year",y="Density records of migratory birds")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text=element_text(size=20),axis.title=element_text(size=18), axis.title.x = element_text(margin = unit(c(5, 0, 0, 0), "mm")))+ geom_vline(xintercept= c(47,315), linetype = "dashed", color = "goldenrod3") + geom_vline(xintercept= c(51, 309),linetype = "dashed", color = "darkblue") +
 theme(legend.position = "top")
 
-#Hacer subset por periodo y año (de ser necesario)
+#subset for period and year
 subset_period <- subset(data, data$period == "modern")
 subset_year <- subset(subset_period, subset_period$YEAR == 2016)
 
-#Comprobar con la gráfica
+#visualize
 ggplot(data = data, aes(day_of_year, fill = period)) +
   geom_density(alpha = 0.25) + scale_fill_manual(values = c("darkblue", "yellow"))+
   labs(x="",y="Density")+ theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.text=element_text(size=20),axis.title=element_text(size=18), axis.title.x = element_text(margin = unit(c(5, 0, 0, 0), "mm")))+ 
   theme(legend.position = "none")
-#Extraer el día en que se presenta la máxima densidad
-#Definir función para calcular máximos locales
+
+#Extract day of maximum density
+#Function to calculate local maxima
 localMaxima <- function(x) {
   # Use -Inf instead if x is numeric (non-integer)
   y <- diff(c(-.Machine$integer.max, x)) > 0L
@@ -42,15 +43,15 @@ localMaxima <- function(x) {
   y
 }
 
-#Calcular densidad para el subset de periodo
+#Calculate density
 density_data <- density(subset_year$day_of_year)
 
-#Calcular máximos locales 
+#Calculate local maxima
 loc.max <- density_data$x[localMaxima(density_data$y)]
 #max <- which.max(density_data$y)
 #day_max_density <- density_data$x[max]
 
-#Comprobar con la gráfica
+#Visualize
 ggplot(data = subset_year, aes(day_of_year, fill = period)) +
   geom_density(alpha = 0.25) + 
   labs(x="",y="Density")+
@@ -58,21 +59,21 @@ ggplot(data = subset_year, aes(day_of_year, fill = period)) +
   geom_vline(xintercept=loc.max
   )
 
-#Buscar máximos locales de interés
+#Get local maxima of interest
 loc.max[3]
 
-####EXPLORAR GRÁFICAS Y ESTADÍSTICAS
-#Cargar base de datos de días de máxima densidad
-histvsmod_max <- read.delim("C:\\Users\\camil\\OneDrive\\Documents\\Camila\\Publicaciones\\Historical migration Phenology\\Datos Fenología DAG\\Datos Fenología DAG\\histvsmod_max.txt")
+####Explore graphs and statistics
+#load data of maximum density dates
+histvsmod_max <- read.delim("your path\histvsmod_max.txt")
 
 head(histvsmod_max)
-#Hacer subset de histórico y modernos (modificar según necesidad)
+#Subset historical and modern
 years <- subset(histvsmod_max, Year!="all")
 years$Year <- as.numeric(years$Year)
 dataset <- subset(years, Dataset== "plus50")
 dataset$Year <- as.numeric(dataset$Year)
 
-#Gráficas 
+#Graphs
 windows()
 ggplot(data = dataset, aes(x=Year, y=Day_maxdensity_spring))+
   geom_point(size = 4, color = "yellow" )+
