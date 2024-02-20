@@ -3,8 +3,8 @@ library(dplyr)
 library(lubridate)
 library(maps)
 
-#Histograma y density plot con datos de registros historicos
-setwd("C:/Users/USER/OneDrive/Documentos/Universidad/Evolvert/Proyecto migratorias/Fase 4")
+#Histogram and density plot with historical data
+setwd("your path")
 hist_migs <- read.csv("Hist_Records_Migrants.csv", h = T, sep = ";")
 
 head(hist_migs)
@@ -22,7 +22,7 @@ ggplot(data = days, aes(day_of_year)) +
 geom_density(col="#FFBB00",size=1.5) +
   labs(x="Date of record",y="Density")
 
-#Datos por especie_historicos
+#Data for each species
 df <- days %>% group_by(SPECIES_NAME) %>% 
   mutate(count_name_occurr = n())
 
@@ -39,7 +39,7 @@ ggplot(data = plus20, aes(day_of_year, fill = SPECIES_NAME)) +
   geom_density(col="#FFBB00",size=1.5, alpha = 0.5) +
   labs(x="Date of record",y="Density")
 
-#Species with more than 50 records - probably the only group of species worth including?
+#Species with more than 50 records 
 
 plus50 <- df %>% filter(count_name_occurr >= 50)
 
@@ -56,7 +56,7 @@ ggplot(data = plus50, aes(day_of_year, fill = SPECIES_NAME)) +
 
 
 
-#Species with more than 150 records - probably the only group of species worth including?
+#Species with more than 150 records 
 
 plus150 <- df %>% filter(count_name_occurr >= 150) 
 
@@ -66,13 +66,13 @@ ggplot(data = plus150, aes(day_of_year, fill = SPECIES_NAME)) +
   #scale_x_continuous(breaks=pretty(plus150$day_of_year, n=13))
 
 
-
+#Exploring spatial and temporal biases in data
 #Latitude and date
 
 plot(df$day_of_year, df$LATITUDE)
 plot(df$day_of_year, df$LONGITUDE)
 
-#Crear un data frame con el listado de especies que tienen registros historicos para filtrar datos de eBird
+#Create a data frame of species with enough historical records to join with eBird data
 
 sp <- days %>% select(SPECIES_NAME) 
 sp <- data.frame(SPECIES.NAME = unique(sp$SPECIES_NAME))
@@ -88,32 +88,31 @@ sp150 <- plus150 %>% select(SPECIES_NAME)
 sp150 <- data.frame(SPECIES.NAME = unique(sp150$SPECIES_NAME))
 
 
-#Datos de eBird para todo Colombia hasta Agosto 2018.
-my_data <- read.delim(file = "C:/Users/USER/OneDrive/Documentos/Universidad/Evolvert/Proyecto migratorias/Fase 4/ebd_CO_2022.txt", 
+#Load eBird data
+my_data <- read.delim(file = "your path/ebd_CO_2022.txt", 
                       header=T,
                       sep="\t",
                       quote="", # very important
                       stringsAsFactors = F # OPTIONAL, False = read characters as strings instead of factors
 )
-#my_data2 <- read.delim("C:/Users/USER/OneDrive/Documentos/Universidad/Evolvert/Proyecto migratorias/Fase 4/ebd_filtered_COL.txt")
 
 head(my_data)
 
 species <- levels(factor(days$SPECIES_NAME))
 
-#Filtrar campos de interes
+#Filter variables of interest
 modern <- my_data %>% 
   select(COMMON.NAME, SCIENTIFIC.NAME,OBSERVATION.COUNT,STATE,LOCALITY, LOCALITY.ID, LATITUDE, LONGITUDE,OBSERVATION.DATE, PROTOCOL.TYPE,ALL.SPECIES.REPORTED,APPROVED) 
 
-#Formato de fecha
+#Format dates
 modern %>% 
   mutate(modern_date = as.Date(OBSERVATION.DATE, "%Y-%m-%d"))
 
-#Extraer año y agregarlo al dataframe
+#Extract year and add to data frame
 year <- as.numeric(format(as.Date(modern$OBSERVATION.DATE, format="%Y-%m-%d"),"%Y"))
 modern$YEAR <- year
 
-#Observaciones del 2009 en adelante
+#Filter observations from 2009 onwards
 
 modern2 <- modern[modern$SCIENTIFIC.NAME %in% sp$SPECIES.NAME,] %>% filter(YEAR > 2008)
 modern3 <- modern[modern$SCIENTIFIC.NAME %in% sp20$SPECIES.NAME,] %>% filter(YEAR > 2008)
@@ -155,7 +154,7 @@ days_mod5 <- modern5 %>%
   select(day_of_year, period, SPECIES_NAME, LATITUDE, LONGITUDE, YEAR)
   
 
-#Unir registros historicos y modernos
+#Join historical and modern records
 all_data <- rbind(days, days_mod)
 
 all_data20 <- rbind(plus20, days_mod3)
@@ -164,12 +163,13 @@ all_data50 <- rbind(plus50, days_mod4)
 
 all_data150 <- rbind(plus150, days_mod5)
 
-#Exportar tablas de datos para ser usados posteriormente
+#Export data for further use
 write.table(all_data, file="all_data.txt", col.names = T, sep= "t")
 write.table(all_data150, file="all_data150.txt", col.names = T, sep= "t")
 write.table(all_data20, file="all_data20.txt", col.names = T, sep= "t")
 write.table(all_data50, file="all_data50.txt", col.names = T, sep= "t")
 
+#Data visualizations
 
 theme_set(theme_classic())
 
@@ -195,7 +195,7 @@ ggplot(data = all_data150, aes(day_of_year, fill = period)) +
   labs(x="Date of record",y="Density")+
   scale_x_continuous(breaks=seq(1,366,30.5))
 
-#Solo especies con Plus 50 records
+#Species with Plus 50 records
 
 swth <- all_data50 %>% filter(SPECIES_NAME == "Catharus ustulatus") 
  
