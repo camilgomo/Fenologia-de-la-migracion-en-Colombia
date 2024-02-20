@@ -60,7 +60,7 @@ bkgr_xy <- bkgr.coords %>% select(Lat, Lon) %>% mutate(x = Lon, y = Lat) %>% sel
 
 #### All Species ####
 ## Here we get all the coords in the .shp file
-## .shp files for every species available at: https://github.com/camilgomo/Fenologia-de-la-migracion-en-Colombia
+## .shp files for every species available at: https://github.com/camilgomo/Fenologia-de-la-migracion-en-Colombia/coords
 
 
 bwwa.coords <- as.data.frame(read_sf("Data/wetransfer_acfl_coords-cpg_2023-10-26_1934/bwwa_coords.shp"))
@@ -100,12 +100,12 @@ bbwa.coords <- as.data.frame(read_sf("Data/wetransfer_acfl_coords-cpg_2023-10-26
 bbwa_xy <- bbwa.coords %>% select(Lat, Lon) %>% mutate(x = Lon, y = Lat) %>% select(x,y) %>% mutate(sp = "bbwa")
 
 
-## Just Run this one time at the beggining
+## Just Run this one time at the beggining to exclude na values
 clim.bkg<-na.exclude(data.frame(extract(clim.bkg.nam,bkgr_xy[,1:2])))
 
 
 
-#### Pair between species ####
+#### Pairwise comparisons between species ####
 
 ## Change the pair of species each time to run the analyses
 
@@ -157,7 +157,7 @@ scores.spb <- scores.spb %>%
 za<- ecospat.grid.clim.dyn(scores.bkg,scores.bkg,scores.spa,100)
 zb<- ecospat.grid.clim.dyn(scores.bkg,scores.bkg,scores.spb,100)
 
-# overlap corrected by availabilty of background conditions ESTE ES EL VALOR QUE NOS INTERESA
+# niche overlap value corrected by availabilty of background conditions 
 ecospat.niche.overlap(za,zb,cor=F) 
 
 
