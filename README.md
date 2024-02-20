@@ -1,5 +1,5 @@
 # Fenologia-de-la-migracion-en-Colombia
-Rodriguez,D., Mateus, B., Gómez, C., Cadena.C.D.(InPrep). Changes in bird migration phenology over one century: 
+Rodriguez, D., Mateus, B., Gómez, C., Cadena, C.D.(InPrep). Changes in bird migration phenology over one century: 
 a perspective from the Neotropical non-breeding grounds.Submitted to Current Biology. Feb 2024.
 
 Comparison of historical and current records of migratory species in Colombia. Based on collection specimens from 1908-1965, 
