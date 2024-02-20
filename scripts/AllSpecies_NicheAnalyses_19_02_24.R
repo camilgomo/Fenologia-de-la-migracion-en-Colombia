@@ -52,14 +52,14 @@ plot(clim.bkg.nam)
 
 ## Coordinates for climatic space available in all North America "background" (it is used to calibrate the PCA with available climatic space vs the climate space that the species uses)
 
-bkgr.coords <- as.data.frame(read_sf("C:/Users/Usuario/Documents/SELVA/Migration_Phenology/Data/wetransfer_acfl_coords-cpg_2023-10-26_1934/BKG_coords.shp")) 
+bkgr.coords <- as.data.frame(read_sf("C:/your path/BKG_coords.shp")) 
 
 bkgr_xy <- bkgr.coords %>% select(Lat, Lon) %>% mutate(x = Lon, y = Lat) %>% select(x,y)
 
 
 
 #### All Species ####
-## Here we get all the coords in .shp file
+## Here we get all the coords in the .shp file
 ## .shp files for every species available at: https://github.com/camilgomo/Fenologia-de-la-migracion-en-Colombia
 
 
