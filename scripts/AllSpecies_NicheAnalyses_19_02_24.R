@@ -22,7 +22,7 @@ library(ggpubr)
 setwd("C:/Users/Usuario/Documents/SELVA/Migration_Phenology")
 getwd()
 
-### Get the WorldClim .tif files with the variables
+### Get the WorldClim .tif files with climatic variables (elevation, aspect, seasonal precipitation, seasonal tempmerature,slope,maximum temperature,minimum temperature)
 #tif_directory <- "C:/Users/Usuario/Documents/SELVA/Migration_Phenology/WorldClim" ## your data goes here
 
 tif_files <- list.files(tif_directory, pattern = "\\.tif$", full.names = TRUE)
