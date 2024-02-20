@@ -19,11 +19,11 @@ library(ggpubr)
 
 
 ### Set library
-setwd("C:/Users/Usuario/Documents/SELVA/Migration_Phenology")
+setwd("C:/your path/Migration_Phenology")
 getwd()
 
-### Get the WorldClim .tif files with climatic variables (elevation, aspect, seasonal precipitation, seasonal tempmerature,slope,maximum temperature,minimum temperature)
-#tif_directory <- "C:/Users/Usuario/Documents/SELVA/Migration_Phenology/WorldClim" ## your data goes here
+### Get the WorldClim .tif files with monthly climatic variables (elevation, aspect, seasonal precipitation, seasonal tempmerature,slope,maximum temperature,minimum temperature)
+#tif_directory <- "C:/.../Migration_Phenology/WorldClim" ## your data goes here
 
 tif_files <- list.files(tif_directory, pattern = "\\.tif$", full.names = TRUE)
 
@@ -43,7 +43,7 @@ bkg.nam<-aggregate(countriesCoarseLessIslands[countriesCoarseLessIslands$ADM0_A3
 clim.bkg.nam<-mask(crop(clim,bbox(bkg.nam)),bkg.nam) #se demora en correr
 print(clim.bkg.nam)
 
-#This was a template to generate the random coordenates in ArcMap
+#This was a template to generate the random coordinates in ArcMap
 #x <- rast(clim.bkg.nam)
 #terra::writeRaster(x, "backgr.tif")
 
