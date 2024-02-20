@@ -1,27 +1,27 @@
-#CALCULAR EL DÍA EN QUE SE PRESENTA LA MÁXIMA DENSIDAD
-setwd("C:/Users/USER/OneDrive/Documentos/Universidad/Evolvert/Proyecto migratorias/Fase 4")
+#Calculate de day of maximum density
+setwd("C:your path")
 library(ggplot2)
 library(ggpubr)
 library(ggeasy)
 
-#Cargar datos
+#load data
 data <- read.table("all_data50.txt", h = T, sep = "t")
 
-#Eliminar NAs (de ser necesario)
+#eliminate NA values if necessary
 data <- na.omit(data)
 
-#Hacer subset por periodo y año (de ser necesario)
+#Subset by period and year
 subset_period <- subset(data, data$period == "modern")
 subset_year <- subset(subset_period, subset_period$YEAR == 2016)
 
-#Comprobar con la gráfica
+#Visualize
 ggplot(data = subset_year, aes(day_of_year, fill = period)) +
   geom_density(alpha = 0.25) + 
   labs(x="",y="Density")
 
 
-#Extraer el día en que se presenta la máxima densidad
-#Definir función para calcular máximos locales
+#Extract day of maximum density
+#Define function to estimate local maxima
 localMaxima <- function(x) {
   # Use -Inf instead if x is numeric (non-integer)
   y <- diff(c(-.Machine$integer.max, x)) > 0L
@@ -34,15 +34,15 @@ localMaxima <- function(x) {
   y
 }
 
-#Calcular densidad para el subset de periodo
+#Estimate density for subset of period
 density_data <- density(subset_year$day_of_year)
 
-#Calcular máximos locales 
+#Calculate local maxima 
 loc.max <- density_data$x[localMaxima(density_data$y)]
 #max <- which.max(density_data$y)
 #day_max_density <- density_data$x[max]
 
-#Comprobar con la gráfica
+#Visualize
 ggplot(data = subset_year, aes(day_of_year, fill = period)) +
   geom_density(alpha = 0.25) + 
   labs(x="",y="Density")+
@@ -50,20 +50,20 @@ ggplot(data = subset_year, aes(day_of_year, fill = period)) +
   geom_vline(xintercept=loc.max
   )
 
-#Buscar máximos locales de interés
+#Identify local maxima of interest
 loc.max[2]
 
-####EXPLORAR GRÁFICAS Y ESTADÍSTICAS
-#Cargar base de datos de días de máxima densidad
-histvsmod_max <- read.delim("~/Universidad/Evolvert/Proyecto migratorias/Fase 4/histvsmod_max.txt")
+####Explore graphs and statistics
+#Load data with local maxima
+histvsmod_max <- read.delim("~your path/histvsmod_max.txt")
 
-#Hacer subset de histórico y modernos (modificar según necesidad)
+#Subset historical and modern as needed
 years <- subset(histvsmod_max, Year!="all")
 years$Year <- as.numeric(years$Year)
 dataset <- subset(years, Dataset== "plus50")
 dataset$Year <- as.numeric(dataset$Year)
 
-#Gráficas 
+#Graphs
 ggplot(data = dataset, aes(x=Year, y=Day_maxdensity_spring, color = Dataset))+
   geom_point()+
   geom_abline()+
